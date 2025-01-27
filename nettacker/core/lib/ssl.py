@@ -29,7 +29,8 @@ def create_socket_connection(context, host, port, timeout):
 def is_weak_ssl_version(host, port, timeout):
     def test_ssl_version(host, port, timeout, ssl_version=None):
         try:
-            context = ssl.SSLContext(ssl_version)
+            context = ssl.create_default_context()
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
             socket_connection = create_socket_connection(context, host, port, timeout)
             return socket_connection.version()
 
@@ -42,8 +43,6 @@ def is_weak_ssl_version(host, port, timeout):
     ssl_versions = (
         ssl.PROTOCOL_TLS_CLIENT,  # TLS 1.3
         ssl.PROTOCOL_TLSv1_2,
-        ssl.PROTOCOL_TLSv1_1,
-        ssl.PROTOCOL_TLSv1,
     )
     supported_versions = []
     lowest_version = ""
